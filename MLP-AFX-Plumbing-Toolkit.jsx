@@ -22,64 +22,101 @@
 
 function buildUI(thisObj)
 {
-	var panel = (thisObj instanceof Panel) ? thisObj : new Window("palette", "MLP AFX Plumbing Toolkit", undefined, {resizeable:true});
+	// DIALOG
+	// ======
+	var dialog = new Window("dialog");
+	dialog.text = "MLP AFX Plumbing Toolkit";
+	dialog.orientation = "column";
+	dialog.alignChildren = ["center","top"];
+	dialog.spacing = 10;
+	dialog.margins = 16;
 
-	res = "group\
-	{\
-		panel: Panel\
-		{\
-			text:'v1.0 by Shimmermare', orientation:'row', alignment:['fill','fill'], \
-				column1: Group\
-				{\
-					orientation:'column', alignChildren:['fill','center'],\
-					initProject: Button{text: 'Init project'},\
-					importScenes: Button{text: 'Import scenes'},\
-					renderScenes: Button{text: 'Render scenes'}\
-				},\
-				column2: Group\
-				{\
-					orientation:'column', alignChildren:['fill','center'],\
-					rescale: Button{text: 'Rescale'},\
-					addMagicFX: Button{text: 'Add magic FX'},\
-					addSunFX: Button{text: 'Add sun FX'}\
-				}\
-		}\
-	}";
-	
-	panel.group = panel.add(res);
-	
-	panel.group.panel.column1.initProject.onClick = function()
+	// groupMain
+	// =========
+	var groupMain = dialog.add("group", undefined, {name: "groupMain"});
+	groupMain.preferredSize.width = 300;
+	groupMain.orientation = "row";
+	groupMain.alignChildren = ["left","center"];
+	groupMain.spacing = 10;
+	groupMain.margins = 0;
+
+	// GROUP1
+	// ======
+	var group1 = groupMain.add("group", undefined, {name: "group1"});
+	group1.orientation = "row";
+	group1.alignChildren = ["left","center"];
+	group1.spacing = 10;
+	group1.margins = 0;
+
+	var sunnie = new File(new File($.fileName).path + "/Sunnie.png");
+	var image1 = group1.add("image", undefined, sunnie, {name: "image1"});
+
+	// PANELPIPELINE
+	// =============
+	var panelPipeline = groupMain.add("panel", undefined, undefined, {name: "panelPipeline"});
+	panelPipeline.text = "Pipeline";
+	panelPipeline.preferredSize.width = 150;
+	panelPipeline.orientation = "column";
+	panelPipeline.alignChildren = ["fill","top"];
+	panelPipeline.spacing = 10;
+	panelPipeline.margins = 10;
+
+	var buttonInitProject = panelPipeline.add("button", undefined, undefined, {name: "buttonInitProject"});
+	buttonInitProject.text = "Init project";
+
+	var buttonImportScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonImportScenes"});
+	buttonImportScenes.text = "Import scenes";
+
+	var buttonRenderScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonRenderScenes"});
+	buttonRenderScenes.text = "Render scenes";
+
+	// PANELTOOLS
+	// ==========
+	var panelTools = groupMain.add("panel", undefined, undefined, {name: "panelTools"});
+	panelTools.text = "Tools";
+	panelTools.preferredSize.width = 150;
+	panelTools.orientation = "column";
+	panelTools.alignChildren = ["fill","top"];
+	panelTools.spacing = 10;
+	panelTools.margins = 10;
+
+	var buttonRescale = panelTools.add("button", undefined, undefined, {name: "buttonRescale"});
+	buttonRescale.text = "Rescale";
+
+	var buttonAddMagicFX = panelTools.add("button", undefined, undefined, {name: "buttonAddMagicFX"});
+	buttonAddMagicFX.text = "Add magic FX";
+
+	var buttonAddSunFX = panelTools.add("button", undefined, undefined, {name: "buttonAddSunFX"});
+	buttonAddSunFX.text = "Add sun FX";
+
+	dialog.groupMain.panelPipeline.buttonInitProject.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/InitProject.jsx");
 	}
-	panel.group.panel.column1.importScenes.onClick = function()
+	dialog.groupMain.panelPipeline.buttonImportScenes.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/ImportScenes.jsx");
 	}
-	panel.group.panel.column1.renderScenes.onClick = function()
+	dialog.groupMain.panelPipeline.buttonRenderScenes.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/RenderScenes.jsx");
 	}
-	panel.group.panel.column2.rescale.onClick = function()
+	dialog.groupMain.panelTools.buttonRescale.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/Rescale.jsx");
 	}
-	panel.group.panel.column2.addMagicFX.onClick = function()
+	dialog.groupMain.panelTools.buttonAddMagicFX.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/AddMagicFX.jsx");
 	}
-	panel.group.panel.column2.addSunFX.onClick = function()
+	dialog.groupMain.panelTools.buttonAddSunFX.onClick = function()
 	{
 		$.evalFile(new File($.fileName).path + "/AFX/AddSunFX.jsx");
 	}
 	
-	panel.layout.layout(true);
-	return panel;
+	return dialog;
 }
 
-var ui = buildUI(this);
-if((ui != null) && (ui instanceof Window))
-{
-	ui.center();
-	ui.show();
-}
+var dialog = buildUI(this);
+dialog.center();
+dialog.show();
