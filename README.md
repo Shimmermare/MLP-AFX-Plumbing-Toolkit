@@ -6,7 +6,7 @@ This toolkit, roughly speaking, replicates Flash-AFX pipeline that was used by D
 ### How to install ###
 1. Get Macromedia Flash 8. **Only Flash 8 is supported at the moment because MLP itself was created in it (at least first seasons).**  
 2. Create After Effects project in a separate folder anywhere you like.  
-3. Download toolkit and place it anywhere you like, but project folder is recommended.  
+3. Download toolkit and place it in project folder.  
 4. To open toolkit, `File -> Scripts -> Run Script File...` and select `MLP-AFX-Plumbing-Toolkit.jsx`.  
 5. Click `Init project` button. You'll need to specify flash executable location.  
   
