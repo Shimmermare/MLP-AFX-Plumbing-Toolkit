@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2019 Shimmermare
+// Copyright (c) 2019 Shimmermare <shimmermare@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -232,9 +232,7 @@ function showDialog()
 }
 
 function initProject()
-{
-	app.beginUndoGroup("Init project");
-	
+{	
 	app.project.timeDisplayType = TimeDisplayType.FRAMES;
 	app.project.bitsPerChannel = 16;//idk why 16 bit colors but DHX says so...
 
@@ -243,7 +241,6 @@ function initProject()
 	flashPathFile.write(flashPath);
 
 	new Folder(app.project.file.path + "/ScenesFlash").create();
-	new Folder(app.project.file.path + "/ScenesSWF").create();
 	new Folder(app.project.file.path + "/ScenesPNG").create();
 	new Folder(app.project.file.path + "/ScenesManual").create();
 
@@ -280,8 +277,7 @@ function initProject()
 	{
 		app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
 	}
-	
-	app.endUndoGroup();
+
 	alert("Project initialized.");
 }
 
