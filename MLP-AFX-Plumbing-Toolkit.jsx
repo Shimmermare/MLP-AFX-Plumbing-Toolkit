@@ -64,11 +64,8 @@ function buildUI(thisObj)
 	var buttonInitProject = panelPipeline.add("button", undefined, undefined, {name: "buttonInitProject"});
 	buttonInitProject.text = "Init project";
 
-	var buttonImportScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonImportScenes"});
-	buttonImportScenes.text = "Import scenes";
-
-	var buttonRenderScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonRenderScenes"});
-	buttonRenderScenes.text = "Render scenes";
+	var buttonUpdateScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonUpdateScenes"});
+	buttonUpdateScenes.text = "Update scenes";
 
 	// PANELTOOLS
 	// ==========
@@ -86,32 +83,21 @@ function buildUI(thisObj)
 	var buttonAddMagicFX = panelTools.add("button", undefined, undefined, {name: "buttonAddMagicFX"});
 	buttonAddMagicFX.text = "Add magic FX";
 
-	var buttonAddSunFX = panelTools.add("button", undefined, undefined, {name: "buttonAddSunFX"});
-	buttonAddSunFX.text = "Add sun FX";
-
 	dialog.groupMain.panelPipeline.buttonInitProject.onClick = function()
 	{
-		$.evalFile(new File($.fileName).path + "/AFX/InitProject.jsx");
+		$.evalFile(new File($.fileName).path + "/InitProject.jsx");
 	}
-	dialog.groupMain.panelPipeline.buttonImportScenes.onClick = function()
+	dialog.groupMain.panelPipeline.buttonUpdateScenes.onClick = function()
 	{
-		$.evalFile(new File($.fileName).path + "/AFX/ImportScenes.jsx");
-	}
-	dialog.groupMain.panelPipeline.buttonRenderScenes.onClick = function()
-	{
-		$.evalFile(new File($.fileName).path + "/AFX/RenderScenes.jsx");
+		$.evalFile(new File($.fileName).path + "/UpdateScenes.jsx");
 	}
 	dialog.groupMain.panelTools.buttonRescale.onClick = function()
 	{
-		$.evalFile(new File($.fileName).path + "/AFX/Rescale.jsx");
+		$.evalFile(new File($.fileName).path + "/Rescale.jsx");
 	}
 	dialog.groupMain.panelTools.buttonAddMagicFX.onClick = function()
 	{
-		$.evalFile(new File($.fileName).path + "/AFX/AddMagicFX.jsx");
-	}
-	dialog.groupMain.panelTools.buttonAddSunFX.onClick = function()
-	{
-		$.evalFile(new File($.fileName).path + "/AFX/AddSunFX.jsx");
+		$.evalFile(new File($.fileName).path + "/AddMagicFX.jsx");
 	}
 	
 	return dialog;
