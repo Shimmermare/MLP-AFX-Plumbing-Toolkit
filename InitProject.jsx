@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-var flashPath;
+var flashPath = null;
 var width = 3840;
 var height = 2160;
 var duration = 32008;
@@ -103,12 +103,8 @@ function showDialog()
 	buttonFlash.preferredSize.width = 65;
 	buttonFlash.onClick = function()
 	{
-		var flashExec = File.openDialog("Specify Flash 8 executable", "Executable:Flash.exe");
-		if (flashExec === null)
-		{
-			alert("Specify flash executable!");
-			return;
-		}
+		var flashExec = File.openDialog("Specify Flash 8 executable", "Flash 8:Flash.exe,Any:*.exe");
+		if (flashExec === null) return;
 		flashPath = flashExec.absoluteURI;
 		textFlash.text = flashPath;
 	}
@@ -216,15 +212,18 @@ function showDialog()
 	buttonInit.preferredSize.width = 100;
 	buttonInit.onClick = function()
 	{
-		if (flashPath === 'undefined')
+		if (!flashPath)
 		{
-			alert("Specify flash location first!");
+			alert("Specify flash executable first!");
+			return;
 		}
-		else
+		if (flashPath.indexOf("8/Flash.exe") == -1 && !confirm("Looks like you're using Flash version other than 8. If you are using flash files from MLP, nothing is guaranteed to work.\nDo you want to proceed?"))
 		{
-			dialog.close();
-			initProject();
+			return;
 		}
+		
+		dialog.close();
+		initProject();
 	}
 
 	dialog.center();
