@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+if (app.project.file == null)
+{
+	throw "Save project to file before initializing!";
+}
+
 var flashPath = null;
 var width = 3840;
 var height = 2160;
