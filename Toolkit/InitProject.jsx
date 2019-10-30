@@ -25,8 +25,7 @@ if (app.project.file == null)
 	throw "Save project to file before initializing!";
 }
 
-var keepProjectId = false;
-var projectId;
+var projectId = null;
 for (var i = 1; i <= app.project.rootFolder.numItems; i++)
 {
 	var item = app.project.rootFolder.item(i);
@@ -36,12 +35,15 @@ for (var i = 1; i <= app.project.rootFolder.numItems; i++)
 		{
 			throw "Cancelled";
 		}
-		keepProjectId = true;
 		projectId = item.name.substring("__PROJECT_ID__:".length);
 	}
 }
 
 var flashPath = null;
+if (projectId)
+{
+	flashPath = app.settings.getSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "flash_path")
+}
 var width = 3840;
 var height = 2160;
 var duration = 32008;
@@ -95,6 +97,10 @@ function showDialog()
 
 	var textFlash = groupFlash.add('edittext {properties: {name: "textFlash", readonly: true}}');
 	textFlash.preferredSize.width = 65;
+	if (flashPath)
+	{
+		textFlash.text = flashPath;
+	}
 	
 	var buttonFlash = groupFlash.add("button", undefined, undefined, {name: "buttonFlash"});
 	buttonFlash.text = "Open";
@@ -227,62 +233,12 @@ function initProject()
 	new Folder(app.project.file.path + "/ScenesPNG").create();
 	new Folder(app.project.file.path + "/ScenesManual").create();
 
-	var scenesFolderExists = false;
-	for (var i = 1; i <= app.project.rootFolder.numItems; i++)
-	{
-		var item = app.project.rootFolder.item(i);
-		if (item.name === "Scenes" && item instanceof FolderItem)
-		{
-			scenesFolderExists = true;
-			break;
-		}
-	}
-	if (!scenesFolderExists)
-	{
-		app.project.items.addFolder("Scenes");
-	}
-
-	var manualScenesFolderExists = false;
-	for (var i = 1; i <= app.project.rootFolder.numItems; i++)
-	{
-		var item = app.project.rootFolder.item(i);
-		if (item.name === "ScenesManual" && item instanceof FolderItem)
-		{
-			manualScenesFolderExists = true;
-			break;
-		}
-	}
-	if (!manualScenesFolderExists)
-	{
-		app.project.items.addFolder("ScenesManual");
-	}
-	
-	var projectName = unescape(app.project.file.name);
-	projectName = projectName.substring(0, projectName.lastIndexOf("."));
-	
-	var compExists = false;
-	var comp;
-	for (var i = 1; i <= app.project.numItems; i++)
-	{
-		var item = app.project.item(i);
-		if (item.name === projectName && item instanceof CompItem)
-		{
-			alert("Main composition already exists! If you want to change resolution, use Rescale script from toolkit.");
-			compExists = true;
-			comp = item;
-			break;
-		}
-	}
-	if (!compExists)
-	{
-		comp = app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
-	}
-	
-	if (!keepProjectId)
+	if (!projectId)
 	{
 		projectId = Math.floor(Math.random() * 100000000);
 		//Fuck I HATE AFX API
-		var projectIdSolid = comp.layers.addSolid([1, 1, 1], "__PROJECT_ID__:" + projectId, 4, 4, 1, 1);
+		var tempComp = app.project.items.addComp("temp", 4, 4, 1, 1, 1);
+		var projectIdSolid = tempComp.layers.addSolid([1, 0.792156863, 0.329411765], "__PROJECT_ID__:" + projectId, 4, 4, 1, 1);
 		for (var i = 1; i <= app.project.items.length; i++)
 		{
 			var item = app.project.items[i];
@@ -291,12 +247,50 @@ function initProject()
 				item.parentFolder = app.project.rootFolder;
 			}
 		}
-		projectIdSolid.remove();
+		tempComp.remove();
 	}
 	
 	app.settings.saveSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "flash_path", flashPath);
+	
+	var section = "MLP-AFX-Plumbing-Toolkit_project_" + projectId;
+	if (!app.settings.haveSetting(section, "scenes_folder_id") || !itemByIDSafe(app.settings.getSetting(section, "scenes_folder_id")))
+	{
+		var item = app.project.items.addFolder("Scenes");
+		app.settings.saveSetting(section, "scenes_folder_id", item.id);
+	}
+	if (!app.settings.haveSetting(section, "manual_scenes_folder_id") || !itemByIDSafe(app.settings.getSetting(section, "manual_scenes_folder_id")))
+	{
+		var item = app.project.items.addFolder("ScenesManual");
+		app.settings.saveSetting(section, "manual_scenes_folder_id", item.id);
+	}
+	
+	if (!app.settings.haveSetting(section, "main_comp_id")
+		|| !itemByIDSafe(app.settings.getSetting(section, "main_comp_id")))
+	{
+		var projectName = unescape(app.project.file.name);
+		projectName = projectName.substring(0, projectName.lastIndexOf("."));
+		var item = app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
+		app.settings.saveSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "main_comp_id", item.id);
+	}
+	else
+	{
+		alert("Main composition already exists! If you want to change resolution, use Rescale script from toolkit.");
+	}
 
 	alert("Project initialized.");
+}
+
+function itemByIDSafe(id)
+{
+	id = parseInt(id, 10);
+	try
+	{
+		return app.project.itemByID(id);
+	}
+	catch (e)
+	{
+		return null;
+	}
 }
 
 showDialog();

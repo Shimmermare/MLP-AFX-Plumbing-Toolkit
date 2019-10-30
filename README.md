@@ -4,7 +4,7 @@ A few Flash and After Effects scripts to make live of a *plumber* easier.
 This toolkit, roughly speaking, replicates Flash-AFX pipeline that was used by DHX Media during production of My Little Pony: Friendship is Magic.  
   
 ### How to install ###  
-1. Get Adobe After Effects CC 12 or later.  
+1. Get Adobe After Effects 13.0 (2014) or later.  
 2. Get Flash (*not Flash Player*). **Use Macromedia Flash 8 for seasons 1-4, Adobe Flash CS4 for seasons 5-6 and Adobe Flash CC for seasons 7-9.**  
 3. Create After Effects project in a separate folder anywhere you like. Save that project at least once.  
 4. Download toolkit and place it anywhere you like. To use it, you can either install it (recommended) or run scripts manually through **`File -> Scripts -> Run Script File...`**.  
