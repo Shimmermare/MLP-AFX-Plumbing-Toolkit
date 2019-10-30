@@ -103,7 +103,7 @@ function showDialog()
 	buttonFlash.preferredSize.width = 65;
 	buttonFlash.onClick = function()
 	{
-		var flashExec = File.openDialog("Specify Flash 8 executable", "Flash 8:Flash.exe,Any:*.exe");
+		var flashExec = File.openDialog("Specify Flash 8 executable", "Any:*.exe");
 		if (flashExec === null) return;
 		flashPath = flashExec.absoluteURI;
 		textFlash.text = flashPath;
@@ -217,11 +217,7 @@ function showDialog()
 			alert("Specify flash executable first!");
 			return;
 		}
-		if (flashPath.indexOf("8/Flash.exe") == -1 && !confirm("Looks like you're using Flash version other than 8. If you are using flash files from MLP, nothing is guaranteed to work.\nDo you want to proceed?"))
-		{
-			return;
-		}
-		
+
 		dialog.close();
 		initProject();
 	}
@@ -238,6 +234,7 @@ function initProject()
 	var flashPathFile = new File(app.project.file.path + "/.flashPath");
 	flashPathFile.open("w");
 	flashPathFile.write(flashPath);
+	flashPathFile.close();
 
 	new Folder(app.project.file.path + "/ScenesFlash").create();
 	new Folder(app.project.file.path + "/ScenesPNG").create();
