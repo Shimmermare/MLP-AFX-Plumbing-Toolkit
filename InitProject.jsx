@@ -33,7 +33,6 @@ var framerate = 24;
 
 function checkAndRun()
 {
-	//debatable, but who gonna init twice anyway?
 	if (new File(app.project.file.path + "/.flashPath").exists)
 	{
 		if (!confirm("Project is already initialized. Overwriting may break things. Do you want to continue?"))
@@ -46,8 +45,6 @@ function checkAndRun()
 
 function showDialog()
 {
-	// DIALOG
-	// ======
 	var dialog = new Window("dialog");
 	dialog.text = "Project settings";
 	dialog.orientation = "column";
@@ -55,8 +52,6 @@ function showDialog()
 	dialog.spacing = 10;
 	dialog.margins = 16;
 
-	// GROUPMAIN
-	// =========
 	var groupMain = dialog.add("group", undefined, {name: "groupMain"});
 	groupMain.preferredSize.width = 228;
 	groupMain.orientation = "row";
@@ -64,8 +59,6 @@ function showDialog()
 	groupMain.spacing = 10;
 	groupMain.margins = 0;
 
-	// GROUP1
-	// ======
 	var group1 = groupMain.add("group", undefined, {name: "group1"});
 	group1.orientation = "column";
 	group1.alignChildren = ["left","top"];
@@ -84,16 +77,12 @@ function showDialog()
 	var statictext4 = group1.add("statictext", undefined, undefined, {name: "statictext4"});
 	statictext4.text = "Framerate:";
 
-	// GROUPFUNC
-	// =========
 	var groupFunc = groupMain.add("group", undefined, {name: "groupFunc"});
 	groupFunc.orientation = "column";
 	groupFunc.alignChildren = ["left","top"];
 	groupFunc.spacing = 5;
 	groupFunc.margins = 0;
 
-	// GROUPFLASH
-	// ==========
 	var groupFlash = groupFunc.add("group", undefined, {name: "groupFlash"});
 	groupFlash.orientation = "row";
 	groupFlash.alignChildren = ["left","center"];
@@ -114,8 +103,6 @@ function showDialog()
 		textFlash.text = flashPath;
 	}
 	
-	// GROUPRES
-	// ========
 	var groupRes = groupFunc.add("group", undefined, {name: "groupRes"});
 	groupRes.orientation = "row";
 	groupRes.alignChildren = ["center","center"];
@@ -161,8 +148,6 @@ function showDialog()
 		}
 	}
 
-	// GROUPFUNC
-	// =========
 	var textFramerate = groupFunc.add('edittext {properties: {name: "textFramerate"}}');
 	textFramerate.text = framerate;
 	textFramerate.preferredSize.width = 145;
@@ -207,8 +192,6 @@ function showDialog()
 		}
 	}
 
-	// DIALOG
-	// ======
 	var divider1 = dialog.add("panel", undefined, undefined, {name: "divider1"});
 	divider1.alignment = "fill";
 
@@ -284,7 +267,7 @@ function initProject()
 		var item = app.project.item(i);
 		if (item.name === projectName && item instanceof CompItem)
 		{
-			alert("Scenes composition found! If you want to change it's resolution, use Rescale button from toolkit. Framerate and duration can be changed from Composition Settings.");
+			alert("Main composition already exists! If you want to change resolution, use Rescale button from toolkit. Framerate and duration can be changed from Composition Settings.");
 			compExists = true;
 			break;
 		}
