@@ -260,6 +260,21 @@ function initProject()
 		app.project.items.addFolder("Scenes");
 	}
 
+	var manualScenesFolderExists = false;
+	for (var i = 1; i <= app.project.rootFolder.numItems; i++)
+	{
+		var item = app.project.rootFolder.item(i);
+		if (item.name === "ScenesManual" && item instanceof FolderItem)
+		{
+			manualScenesFolderExists = true;
+			break;
+		}
+	}
+	if (!manualScenesFolderExists)
+	{
+		app.project.items.addFolder("ScenesManual");
+	}
+	
 	var projectName = unescape(app.project.file.name);
 	projectName = projectName.substring(0, projectName.lastIndexOf("."));
 	
