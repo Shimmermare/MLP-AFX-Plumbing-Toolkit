@@ -25,23 +25,27 @@ if (app.project.file == null)
 	throw "Save project to file before initializing!";
 }
 
+var keepProjectId = false;
+var projectId;
+for (var i = 1; i <= app.project.rootFolder.numItems; i++)
+{
+	var item = app.project.rootFolder.item(i);
+	if (item.name.indexOf("__PROJECT_ID__:") != -1)
+	{
+		if (!confirm("Project is already initialized. Overwriting may break things. Do you want to continue?"))
+		{
+			throw "Cancelled";
+		}
+		keepProjectId = true;
+		projectId = item.name.substring("__PROJECT_ID__:".length);
+	}
+}
+
 var flashPath = null;
 var width = 3840;
 var height = 2160;
 var duration = 32008;
 var framerate = 24;
-
-function checkAndRun()
-{
-	if (new File(app.project.file.path + "/.flashPath").exists)
-	{
-		if (!confirm("Project is already initialized. Overwriting may break things. Do you want to continue?"))
-		{
-			return;
-		}
-	}
-	showDialog();
-}
 
 function showDialog()
 {
@@ -219,11 +223,6 @@ function initProject()
 	app.project.timeDisplayType = TimeDisplayType.FRAMES;
 	app.project.bitsPerChannel = 16;//idk why 16 bit colors but DHX says so...
 
-	var flashPathFile = new File(app.project.file.path + "/.flashPath");
-	flashPathFile.open("w");
-	flashPathFile.write(flashPath);
-	flashPathFile.close();
-
 	new Folder(app.project.file.path + "/ScenesFlash").create();
 	new Folder(app.project.file.path + "/ScenesPNG").create();
 	new Folder(app.project.file.path + "/ScenesManual").create();
@@ -262,22 +261,42 @@ function initProject()
 	projectName = projectName.substring(0, projectName.lastIndexOf("."));
 	
 	var compExists = false;
+	var comp;
 	for (var i = 1; i <= app.project.numItems; i++)
 	{
 		var item = app.project.item(i);
 		if (item.name === projectName && item instanceof CompItem)
 		{
-			alert("Main composition already exists! If you want to change resolution, use Rescale button from toolkit. Framerate and duration can be changed from Composition Settings.");
+			alert("Main composition already exists! If you want to change resolution, use Rescale script from toolkit.");
 			compExists = true;
+			comp = item;
 			break;
 		}
 	}
 	if (!compExists)
 	{
-		app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
+		comp = app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
 	}
+	
+	if (!keepProjectId)
+	{
+		projectId = Math.floor(Math.random() * 100000000);
+		//Fuck I HATE AFX API
+		var projectIdSolid = comp.layers.addSolid([1, 1, 1], "__PROJECT_ID__:" + projectId, 4, 4, 1, 1);
+		for (var i = 1; i <= app.project.items.length; i++)
+		{
+			var item = app.project.items[i];
+			if (item.name === projectIdSolid.name)
+			{
+				item.parentFolder = app.project.rootFolder;
+			}
+		}
+		projectIdSolid.remove();
+	}
+	
+	app.settings.saveSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "flash_path", flashPath);
 
 	alert("Project initialized.");
 }
 
-checkAndRun();
+showDialog();
