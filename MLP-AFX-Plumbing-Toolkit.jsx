@@ -20,42 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-function buildUI(thisObj)
+if (!(this instanceof Panel))
 {
-	// DIALOG
-	// ======
-	var dialog = new Window("dialog");
-	dialog.text = "MLP AFX Plumbing Toolkit";
-	dialog.orientation = "column";
-	dialog.alignChildren = ["center","top"];
-	dialog.spacing = 10;
-	dialog.margins = 16;
+	throw "You can't use toolkit UI as portable script! Use actual scripts instead.";
+}
 
-	// groupMain
-	// =========
-	var groupMain = dialog.add("group", undefined, {name: "groupMain"});
+var toolkitFolder = new Folder(Folder.userData.fullName + "/Adobe/After Effects/" + app.version.match("([0-9]+\.[0-9]+)")[0] + "/Scripts/MLP-AFX-Plumbing-Toolkit");
+	
+function showUI(thisObj)
+{
+	thisObj.preferredSize.width = 300;
+	thisObj.preferredSize.height = 150;
+	
+	var groupMain = thisObj.add("group", undefined, {name: "groupMain"});
 	groupMain.preferredSize.width = 300;
 	groupMain.orientation = "row";
-	groupMain.alignChildren = ["left","center"];
+	groupMain.alignChildren = ["fill","center"];
 	groupMain.spacing = 10;
 	groupMain.margins = 0;
 
-	// GROUP1
-	// ======
 	var group1 = groupMain.add("group", undefined, {name: "group1"});
 	group1.orientation = "row";
 	group1.alignChildren = ["left","center"];
 	group1.spacing = 10;
 	group1.margins = 0;
 
-	var sunnie = new File(new File($.fileName).path + "/Sunnie.png");
+	var sunnie = new File(toolkitFolder.fullName + "/Sunnie.png");
 	var image1 = group1.add("image", undefined, sunnie, {name: "image1"});
 
-	// PANELPIPELINE
-	// =============
 	var panelPipeline = groupMain.add("panel", undefined, undefined, {name: "panelPipeline"});
 	panelPipeline.text = "Pipeline";
-	panelPipeline.preferredSize.width = 150;
 	panelPipeline.orientation = "column";
 	panelPipeline.alignChildren = ["fill","top"];
 	panelPipeline.spacing = 10;
@@ -63,15 +57,20 @@ function buildUI(thisObj)
 
 	var buttonInitProject = panelPipeline.add("button", undefined, undefined, {name: "buttonInitProject"});
 	buttonInitProject.text = "Init project";
-
+	buttonInitProject.onClick = function()
+	{
+		$.evalFile(toolkitFolder.fullName + "/InitProject.jsx");
+	}
+	
 	var buttonUpdateScenes = panelPipeline.add("button", undefined, undefined, {name: "buttonUpdateScenes"});
 	buttonUpdateScenes.text = "Update scenes";
-
-	// PANELTOOLS
-	// ==========
+	buttonUpdateScenes.onClick = function()
+	{
+		$.evalFile(toolkitFolder.fullName + "/UpdateScenes.jsx");
+	}
+	
 	var panelTools = groupMain.add("panel", undefined, undefined, {name: "panelTools"});
 	panelTools.text = "Tools";
-	panelTools.preferredSize.width = 150;
 	panelTools.orientation = "column";
 	panelTools.alignChildren = ["fill","top"];
 	panelTools.spacing = 10;
@@ -79,30 +78,19 @@ function buildUI(thisObj)
 
 	var buttonRescale = panelTools.add("button", undefined, undefined, {name: "buttonRescale"});
 	buttonRescale.text = "Rescale";
-
-	var buttonAddMagicFX = panelTools.add("button", undefined, undefined, {name: "buttonAddMagicFX"});
-	buttonAddMagicFX.text = "Add magic FX";
-
-	dialog.groupMain.panelPipeline.buttonInitProject.onClick = function()
+	buttonRescale.onClick = function()
 	{
-		$.evalFile(new File($.fileName).path + "/InitProject.jsx");
-	}
-	dialog.groupMain.panelPipeline.buttonUpdateScenes.onClick = function()
-	{
-		$.evalFile(new File($.fileName).path + "/UpdateScenes.jsx");
-	}
-	dialog.groupMain.panelTools.buttonRescale.onClick = function()
-	{
-		$.evalFile(new File($.fileName).path + "/Rescale.jsx");
-	}
-	dialog.groupMain.panelTools.buttonAddMagicFX.onClick = function()
-	{
-		$.evalFile(new File($.fileName).path + "/AddMagicFX.jsx");
+		$.evalFile(toolkitFolder.fullName + "/Rescale.jsx");
 	}
 	
-	return dialog;
+	var buttonAddMagicFX = panelTools.add("button", undefined, undefined, {name: "buttonAddMagicFX"});
+	buttonAddMagicFX.text = "Add magic FX";
+	buttonAddMagicFX.onClick = function()
+	{
+		$.evalFile(toolkitFolder.fullName + "/AddMagicFX.jsx");
+	}
+	
+	thisObj.layout.layout(true);
 }
 
-var dialog = buildUI(this);
-dialog.center();
-dialog.show();
+showUI(this);
