@@ -12,17 +12,18 @@ This toolkit, roughly speaking, replicates Flash-AFX pipeline that was used by D
 4.2. (Optional) Reload After Effects.  
 4.3. (Optional) **`Window -> MLP-AFX-Plumbing-Toolkit.jsx`** to open toolkit window. You can add it to main UI by simple drag-and-drop.  
 5. Use **`InitProject.jsx`** script to initialize project. Type in flash executable location and other parameters.  
-6. **Don't delete any created files (`.flashPath`, `ScenesFlash`, `ScenesPNG`) and project items (`Scenes`, composition with the name of project).**  
+6. **Don't delete created project items (`__PROJECT_ID__`, `Scenes`, `ScenesRemoved`, composition with the name of project).**  
   
 ### How to use ###  
   
 #### Scenes ####  
-Flash source folder is **`(project dir)/ScenesFlash/`**. When you add, modify or delete flash scenes, use **`UpdateScenes.jsx`** script. It will automatically render new scenes, re-render modified (*only modified!*) scenes, and move deleted scenes to **`(project dir)/ScenesManual/`** for rendered files and to **`ScenesManual`** for project items.  
-  
-Video files, SWFs and even FLAs can be added as scenes too: just drop it into **`ScenesManual/`**. After update they'll be added to **`ScenesManual`** project folder as footage items.  
+Flash source folder is **`(project dir)/ScenesFlash/`**. When you add, modify or delete flash scenes, use **`UpdateScenes.jsx`** script. It will automatically render new scenes, re-render modified (*only modified!*) scenes, and move deleted scenes to **`ScenesRemoved`**.  
   
 #### Rescale ####  
-Use **`Rescale`** button to rescale project.  
+Use **`Rescale.jsx`** to rescale project.  
+  
+#### Fit ####
+Use **`Fit.jsx`** to fit selected layer into composition.  
   
 #### Magic FX ####  
 Magic FX is a few simple effects on a layer.  
