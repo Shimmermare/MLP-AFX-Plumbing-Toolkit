@@ -231,7 +231,7 @@ function initProject()
 
 	new Folder(app.project.file.path + "/ScenesFlash").create();
 	new Folder(app.project.file.path + "/ScenesPNG").create();
-	new Folder(app.project.file.path + "/ScenesManual").create();
+	new Folder(app.project.file.path + "/ScenesRemoved").create();
 
 	if (!projectId)
 	{
@@ -258,10 +258,10 @@ function initProject()
 		var item = app.project.items.addFolder("Scenes");
 		app.settings.saveSetting(section, "scenes_folder_id", item.id);
 	}
-	if (!app.settings.haveSetting(section, "manual_scenes_folder_id") || !itemByIDSafe(app.settings.getSetting(section, "manual_scenes_folder_id")))
+	if (!app.settings.haveSetting(section, "removed_scenes_folder_id") || !itemByIDSafe(app.settings.getSetting(section, "removed_scenes_folder_id")))
 	{
-		var item = app.project.items.addFolder("ScenesManual");
-		app.settings.saveSetting(section, "manual_scenes_folder_id", item.id);
+		var item = app.project.items.addFolder("ScenesRemoved");
+		app.settings.saveSetting(section, "removed_scenes_folder_id", item.id);
 	}
 	
 	if (!app.settings.haveSetting(section, "main_comp_id")
