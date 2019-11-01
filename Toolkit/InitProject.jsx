@@ -233,21 +233,28 @@ function initProject()
 	new Folder(app.project.file.path + "/ScenesPNG").create();
 	new Folder(app.project.file.path + "/ScenesRemoved").create();
 
+	var solidsFolderItem;
+	for (var i = 1; i <= app.project.rootFolder.numItems; i++)
+	{
+		var item = app.project.rootFolder.item(i);
+		if (item.name == "Solids")
+		{
+			solidsFolderItem = item;
+			break;
+		}
+	}
+	if (!solidsFolderItem)
+	{
+		solidsFolderItem = app.project.items.addFolder("Solids");
+	}
+	
+	var tempComp = app.project.items.addComp("temp", 4, 4, 1, 1, 1);
+
 	if (!projectId)
 	{
 		projectId = Math.floor(Math.random() * 100000000);
-		//Fuck I HATE AFX API
-		var tempComp = app.project.items.addComp("temp", 4, 4, 1, 1, 1);
-		var projectIdSolid = tempComp.layers.addSolid([1, 0.792156863, 0.329411765], "__PROJECT_ID__:" + projectId, 4, 4, 1, 1);
-		for (var i = 1; i <= app.project.items.length; i++)
-		{
-			var item = app.project.items[i];
-			if (item.name === projectIdSolid.name)
-			{
-				item.parentFolder = app.project.rootFolder;
-			}
-		}
-		tempComp.remove();
+		tempComp.layers.addSolid([1, 0.792156863, 0.329411765], "__PROJECT_ID__:" + projectId, 4, 4, 1, 1)
+			.source.parentFolder = app.project.rootFolder;
 	}
 	
 	app.settings.saveSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "flash_path", flashPath);
@@ -264,19 +271,53 @@ function initProject()
 		app.settings.saveSetting(section, "removed_scenes_folder_id", item.id);
 	}
 	
+	var mainComp;
 	if (!app.settings.haveSetting(section, "main_comp_id")
 		|| !itemByIDSafe(app.settings.getSetting(section, "main_comp_id")))
 	{
 		var projectName = unescape(app.project.file.name);
 		projectName = projectName.substring(0, projectName.lastIndexOf("."));
-		var item = app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
+		mainComp = app.project.items.addComp(projectName, width, height, 1, duration / framerate, framerate);
 		app.settings.saveSetting("MLP-AFX-Plumbing-Toolkit_project_" + projectId, "main_comp_id", item.id);
 	}
 	else
 	{
+		mainComp = itemByIDSafe(app.settings.getSetting(section, "main_comp_id"));
 		alert("Main composition already exists! If you want to change resolution, use Rescale script from toolkit.");
 	}
 
+	var skipMagic = false;
+	for (var i = 1; i <= solidsFolderItem.numItems; i++)
+	{
+		if (solidsFolderItem.item(i).name == "MagicReferences")
+		{
+			skipMagic = true;
+			break;
+		}
+	}
+	if (!skipMagic)
+	{
+		var magicFolderItem = solidsFolderItem.items.addFolder("MagicReferences");
+		
+		function addRef(name, color)
+		{
+			tempComp.layers.addSolid(color, name, mainComp.width, mainComp.height, 1).source.parentFolder = magicFolderItem;
+		}
+		
+		addRef("Cadence", [0.52156901359558,0.83921599388123,0.89411801099777]);
+		addRef("Celestia", [0.93725597858429,0.93725597858429,0.60000598430634]);
+		addRef("FlimFlam", [0.23529399931431,0.83137297630310,0.31372600793839]);
+		addRef("Flurry", [0.94902002811432,0.88235300779343,0.44705900549889]);
+		addRef("Luna", [0.36470600962639,0.55686300992966,0.89411801099777]);
+		addRef("Rarity", [0.50048440694809,0.77280682325363,0.88627451658249]);
+		addRef("Starlight", [0.34902998805046,0.85882598161697,0.75686597824097]);
+		addRef("Starswirl", [0.96470588445663,0.95686274766922,0.92156863212585]);
+		addRef("Sunburst", [0.95294100046158,0.93725502490997,0.58039200305939]);
+		addRef("Trixy", [0.87843102216721,0.75686299800873,0.88627499341965]);
+		addRef("Twilight", [0.92941176891327,0.26274511218071,0.55294120311737]);
+	}
+	tempComp.remove();
+	
 	alert("Project initialized.");
 }
 
