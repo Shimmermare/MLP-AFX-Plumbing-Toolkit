@@ -1,0 +1,19 @@
+var projectDir = "%projectDir%";
+//from normal uri to jsfl uri
+projectDir = "file:///" + projectDir.substring(1, 2).toUpperCase() + "|" + projectDir.substring(2);
+var sceneName = "%sceneName%";
+var askSettings = %askSettings%;
+
+var outputFolder = projectDir + "/ScenesPNG/" + sceneName;
+FLfile.createFolder(outputFolder);
+var signalFile = projectDir + "/Temp/." + sceneName + ".rendering";
+
+FLfile.write(signalFile, "opening");
+fl.openDocument(projectDir + "/ScenesFlash/" + sceneName + ".fla");
+var doc = fl.getDocumentDOM();
+
+FLfile.write(signalFile, "rendering" + ":" + doc.getTimeline().frameCount);
+doc.exportPNG(outputFolder + "/.png", !askSettings);
+
+fl.closeDocument(doc, false);
+FLfile.write(signalFile, "finished");
